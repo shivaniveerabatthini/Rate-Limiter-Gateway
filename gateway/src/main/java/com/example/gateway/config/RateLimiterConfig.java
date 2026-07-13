@@ -3,7 +3,6 @@ package com.example.gateway.config;
 import com.example.gateway.ratelimiter.FixedWindowRateLimiter;
 import com.example.gateway.ratelimiter.LeakyBucketRateLimiter;
 import com.example.gateway.ratelimiter.RateLimiter;
-import com.example.gateway.ratelimiter.RedisFixedWindowRateLimiter;
 import com.example.gateway.ratelimiter.SlidingWindowCounterRateLimiter;
 import com.example.gateway.ratelimiter.TokenBucketRateLimiter;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,20 +19,17 @@ public class RateLimiterConfig {
     private final SlidingWindowCounterRateLimiter slidingWindowCounterRateLimiter;
     private final FixedWindowRateLimiter fixedWindowRateLimiter;
     private final LeakyBucketRateLimiter leakyBucketRateLimiter;
-    private final RedisFixedWindowRateLimiter redisFixedWindowRateLimiter;
 
     public RateLimiterConfig(
             TokenBucketRateLimiter tokenBucketRateLimiter,
             SlidingWindowCounterRateLimiter slidingWindowCounterRateLimiter,
             FixedWindowRateLimiter fixedWindowRateLimiter,
-            LeakyBucketRateLimiter leakyBucketRateLimiter,
-            RedisFixedWindowRateLimiter redisFixedWindowRateLimiter) {
+            LeakyBucketRateLimiter leakyBucketRateLimiter) {
 
         this.tokenBucketRateLimiter = tokenBucketRateLimiter;
         this.slidingWindowCounterRateLimiter = slidingWindowCounterRateLimiter;
         this.fixedWindowRateLimiter = fixedWindowRateLimiter;
         this.leakyBucketRateLimiter = leakyBucketRateLimiter;
-        this.redisFixedWindowRateLimiter = redisFixedWindowRateLimiter;
     }
 
     @Bean
@@ -50,10 +46,7 @@ public class RateLimiterConfig {
 
             case "leaky-bucket" -> leakyBucketRateLimiter;
 
-            case "redis-fixed-window" -> redisFixedWindowRateLimiter;
-
-            default -> throw new IllegalArgumentException(
-                    "Unknown algorithm: " + algorithm);
+            default -> fixedWindowRateLimiter;
         };
     }
 }
