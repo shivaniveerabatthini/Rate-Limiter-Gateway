@@ -18,10 +18,20 @@ public class ProductClient {
     @CircuitBreaker(name = "productService", fallbackMethod = "fallback")
     @Bulkhead(name = "productService", fallbackMethod = "fallback")
     public String getProducts() {
+
         return restTemplate.getForObject(PRODUCT_SERVICE_URL, String.class);
+
     }
 
     public String fallback(Throwable t) {
+
+        System.out.println("====================================");
+        System.out.println("PRODUCT SERVICE CALL FAILED");
+        System.out.println("Exception Type : " + t.getClass().getName());
+        System.out.println("Exception Msg  : " + t.getMessage());
+        t.printStackTrace();
+        System.out.println("====================================");
+
         return """
                 {
                   "message":"Product Service is currently unavailable."
